@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import jotaro from './img/jotaro3.png';
+import React, { useState, useEffect } from 'react';
+import jotaro1 from './img/jojo1.png';
+import jotaro2 from './img/jojo2.png';
+import jotaro3 from './img/jojo3.png';
+import jotaro4 from './img/jojo4.png';
+import jotaro5 from './img/jojo5.png';
+import jotaro6 from './img/jojo6.png';
 import './App.css';
 import Card from './components/Card';
 
@@ -9,35 +14,36 @@ function App() {
   const [cards, setCards] = useState([
     {
       hasBeenClicked: false,
-      src: jotaro,
+      src: jotaro1,
       id: 0,
     },
     {
       hasBeenClicked: false,
-      src: jotaro,
+      src: jotaro2,
       id: 1,
     },
     {
       hasBeenClicked: false,
-      src: jotaro,
+      src: jotaro3,
       id: 2,
     },
     {
       hasBeenClicked: false,
-      src: jotaro,
+      src: jotaro4,
       id: 3,
     },
     {
       hasBeenClicked: false,
-      src: jotaro,
+      src: jotaro5,
       id: 4,
     },
     {
       hasBeenClicked: false,
-      src: jotaro,
+      src: jotaro6,
       id: 5,
     },
   ]);
+
   function increaseScore() {
     setScore(score + 1);
     if (maxScore <= score) {
@@ -45,44 +51,71 @@ function App() {
     }
   }
 
+  function showClicks()
+  {
+    console.log(" ");
+    cards.forEach((card) => {
+      
+      console.log(card.id + ": " + card.hasBeenClicked);
+    });
+  }
+
+  /*useEffect(()=>{
+    shuffleCards();
+  },[score])*/
+
   function checkClicks(id) {
-    if (cards[id].hasBeenClicked) {
+    console.log(id + " HOLA: " + cards[id].hasBeenClicked);
+    let idx = cards.findIndex((card) => card.id == id);
+    if (cards[idx].hasBeenClicked) {
       alert('YOUY LOSE YOU FAUCKING IDIOT');
       reset();
     } else {
       console.log(id);
+      showClicks();
       increaseScore();
-      setCards(
-        cards.map((singular) => {
-          if (singular.id === id) {
-            return {
-              ...singular,
-              hasBeenClicked: true,
-            };
-          } else {
-            return singular;
-          }
-        })
-      );
+
+     let new_cards = shuffleCards().map((singular) => {
+        if (singular.id === id) {
+          console.log("id == " + id);
+          return {
+            ...singular,
+            hasBeenClicked: true,
+          };
+        } else {
+          return {...singular};
+        }
+      })
+      setCards(new_cards);
+      
+      showClicks();
     }
+    console.log(cards);
+    
   }
 
   function shuffleCards() {
-    setCards(cards.sort(() => Math.random() - 0.5));
-    console.log(cards);
+    
+    console.log("shuffle");
+    return cards.sort(() => Math.random() - 0.5);
+    //setCards(cards.sort(() => Math.random() - 0.5));
+    //console.log("shuffle");
   }
 
   function reset() {
-    setCards(cards.sort(() => Math.random() - 0.5));
+    console.log("reset");
+    let new_cards = shuffleCards().map((singular) => {
+      return {
+        ...singular,
+        hasBeenClicked: false,
+      };
+    });
+    
     setCards(
-      cards.map((singular) => {
-        return {
-          ...singular,
-          hasBeenClicked: false,
-        };
-      })
+      new_cards
     );
-    shuffleCards();
+    
+    //shuffleCards();
     setScore(0);
   }
 
